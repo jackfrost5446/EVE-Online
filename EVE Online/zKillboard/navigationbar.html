@@ -1,0 +1,106 @@
+<div class="navbar navbar-default" style="margin-bottom: 0px;">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle openMenu" data-toggle="collapse" data-target=".navbar-main">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="/"><img class='zkblogo' src='//{{ siteurl }}/img/wreck.png' style='width: 16px; height: 16px;'/> zKillboard</a>
+		</div>
+		<div class="collapse navbar-collapse navbar-main">
+			<ul class="nav navbar-nav">
+				<li class="dropdown hidden-xs hidden-sm">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Menu <b class="caret"></b></a>
+					<ul class="dropdown-menu asclicks">
+                        <li><a href="/asearch/">Advanced Search</a></li>
+						<li class="divider"></li>
+						<li><a href='/asearch/#{"buttons":["week","rolling","label-5b+","sort-date","sort-desc","page1","victimsonly"]}'>Toy Kills (5b+)</a></li>
+						<li><a href='/asearch/#{"buttons":["week","rolling","label-10b+","sort-date","sort-desc","page1","victimsonly"]}'>Big Kills (10b+)</a></li>
+						<li><a href='/asearch/#{"buttons":["week","rolling","label-capital","label-pvp","sort-date","sort-desc","page1","victimsonly"]}'>Capitals</a></li>
+						<li><a href='/asearch/#{"buttons":["week","rolling","label-cat:65","label-pvp","sort-date","sort-desc","page1","victimsonly"]}'>Structures</a></li>
+						<li><a href='/asearch/#{"buttons":["week","rolling","label-abyssal","sort-date","sort-desc","page1","victimsonly"]}'>Abyssal</a></li>
+						<li><a href='/asearch/#{"buttons":["week","rolling","label-abyssal","label-pvp","sort-date","sort-desc","page1","victimsonly"]}'>Abyssal PvP</a></li>
+						<li><a href='/asearch/#{"buttons":["week","rolling","label-awox","sort-date","sort-desc","page1","victimsonly"]}'>Awox</a></li>
+						<li><a href='/asearch/#{"buttons":["week","rolling","label-ganked","sort-date","sort-desc","page1","victimsonly"]}'>Ganked</a></li>
+						<li><a href='/asearch/#{"buttons":["week","rolling","label-solo","sort-date","sort-desc","page1","victimsonly"]}'>Solo</a></li>
+						<li class="divider"></li>
+						<li><a href='/asearch/#{"buttons":["week","rolling","label-highsec","sort-date","sort-desc","page1","victimsonly"]}'>Highsec</a></li>
+						<li><a href='/asearch/#{"buttons":["week","rolling","label-lowsec","sort-date","sort-desc","page1","victimsonly"]}'>Lowsec</a></li>
+						<li><a href='/asearch/#{"buttons":["week","rolling","label-nullsec","sort-date","sort-desc","page1","victimsonly"]}'>Nullsec</a></li>
+						<li><a href='/asearch/#{"buttons":["week","rolling","label-w-space","sort-date","sort-desc","page1","victimsonly"]}'>W-Space</a></li>
+						<li class="divider"></li>
+                        <li><a href='/asearch/#{"buttons":["week","rolling","sort-date","sort-desc","page1","allinvolved"],"attackers":[{"type":"factionID","id":"500001"}],"victims":[{"type":"factionID","id":"500004"}]}'>Caldari vs Gallente</a></li>
+                        <li><a href='/asearch/#{"buttons":["week","rolling","sort-date","sort-desc","page1","allinvolved"],"attackers":[{"type":"factionID","id":"500003"}],"victims":[{"type":"factionID","id":"500002"}]}'>Amarr vs Minmatar</a></li>
+						<li class="divider"></li>
+						<li><a href="/kills/sponsored/">Sponsored</a></li>
+                        <li><a href="/top/lasthour/all/">Hourly Stats</a><li>
+						<li><a href="/ranks/recent/killers/">Top 10 Recent</a></li>
+						<li><a href="/ranks/alltime/killers/">Top 10 Alltime</a></li>
+                        <li><a href="/ztop/">zTop</a></li>
+					</ul>
+				</li>
+				<li class="dropdown hidden-xs hidden-sm" id="tracker-menu">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Tracker <b class="caret"></b></a>
+					<ul class="dropdown-menu" id='tracker-dropdown'>
+						<li>Please log in first.</li>
+					</ul>
+				</li>
+				<li class="hidden-xs hidden-sm"><a href="/post/">Post</a></li>
+				<li class="hidden-xs hidden-sm"><a href="https://tmikoss.github.io/zkb-map/" target="_new">Map</a></li>
+				<li class="hidden-xs hidden-sm"><a href="/information/payments/"><img src='/img/golden-wreck.png'></a></li>
+                                <li class="hidden-xs hidden-sm"><a href="/account/favorites/"><span id='favorite' style='width: 1em; cursor: pointer;'><b id='fav-star' class="glyphicon glyphicon-star" style='color: #FDBC2C'></b></span></a></li>
+				{% if statslink %}
+					<li class="hidden-xs hidden-sm"><a href="{{ statslink }}">Stats</a></li>
+				{% endif %}
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<li class="visible-lg"><a href="/top/lasthour/all/" rel="tooltip" title="Kills added this hour" id="lasthour">&nbsp;</a></li>
+				<li class="hidden-xs hidden-sm"><a href="#" rel="tooltip" title="Tranquility Status" onClick="return false;"><span id="tqStatus">&nbsp;</span></a></li>
+				<li class="hidden-xs hidden-sm hidden-md"><a href="/ztop/" rel="tooltip" title="Eve Time"><div id="my_clock"></div></a></li>
+                <li>
+                    <form name="search" id="search" class="navbar-form navbar-right">
+                        <div class="form-group">
+                        <div class='input-group' style='width: 100px;'>
+                            <div class="input-group-addon" style='cursor: pointer;' onclick='window.location = "/asearch/"' rel='tooltip' data-original-title='Advanced Search'><a href='/asearch/'  title='Advanced Search'><span class="glyphicon glyphicon-search" style='color: white;'></span></a></div>
+                            <input type="text" class="form-control" placeholder="search here" autocomplete="off" id="searchbox" name="searchbox" tabindex="1" style='width: 200px;'>
+                        </div>
+                        </div>
+                    </form>
+                </li>
+				<li id='usermenu' class="dropdown">
+					<a href="#" class="dropdown-toggle hidden-xs" data-toggle="dropdown" id='usermenu-dropdown'>
+                                        {% if characterID > 0 %}
+                                            <img id='char-image' src="{{ image_character }}{{ characterID }}/portrait?size=32" style='height: 32px; width: 32px; padding: 0px; margin: 0px; margin-top: -8px;'/>
+                                        {% else %}
+                                            <img id='char-image' src="/img/transparent_32.png" style='height: 32px; width: 32px; padding: 0px; margin: 0px; margin-top: -8px;'/>
+                                        {% endif %}
+                                        <span class="caret"></span></a>
+					<a href="#" class="dropdown-toggle hidden-lg hidden-md hidden-sm" data-toggle="dropdown">Account <span class="caret"></span></a>
+					        <ul class="dropdown-menu" id='char-loggedin'>
+							<li id='username' class="dropdown-header">{{ sessionusername }}</li>
+							<li><a href="/account/api/">API</a></li>
+							<li><a href="/account/log/">Log</a></li>
+							<li><a href="/account/payments/">Payments</a></li>
+							<li><a href="/account/">Settings</a></li>
+							<li class="divider hidden-xs"></li>
+							<li class="dropdown-header">Support</li>
+							<li><a href='{{ discordServer }}' target='_blank'>Discord <i class='glyphicon glyphicon-new-window'></i></a></li>
+							<li><a href='/information/faq/'>FAQ</a></li>
+							<li class="divider hidden-xs"></li>
+							<li><a href="/account/logout/">Logout</a></li>
+                                                </ul>
+                                                {% if characterID == 0 %}
+					        <ul class="dropdown-menu" id='char-loggedout'>
+							    <form action="/ccpoauth2/" id="loginform">
+								    <input id='ssologinimage' type="image" src="/img/ssologin.png">
+                                <p><small>Will request killmails and save fitting scopes.</small></p>
+							    </form>
+                            </ul>
+                        {% endif %}
+				</li>
+			</ul>
+		</div>
+	</div>
+    <div id="advancedsearchnavbar" style="background-color: black; text-align: right; padding: 0.5em; padding-right: 7em; display: none;"><a href="/asearch/">Click here for Advanced Search</a></div>
+</div>

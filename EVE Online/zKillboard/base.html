@@ -1,0 +1,207 @@
+{% if not partial %}<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#" lang="en" class="no-js">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		{% if description is not defined %}
+			{% set description =  siteurl ~ " is a killboard for the Massively Multiplayer Online Role Playing Game (MMORPG) EVE-Online." %}
+		{% endif %}
+		<meta name="description" content="{{ description }}">
+		<meta name="title" content="{{ pageTitle }} | {{ siteurl }}">
+		<meta name="keywords" content="eve-online, eve, ccp, ccp games, kills, kill, massively, multiplayer, online, role, playing, game, mmorpg, rank, isk, mmorpg, killboard, zkillboard">
+		<meta name="robots" content="index,follow">
+		<meta name="og:locale" content="en_US">
+		<meta name="og:type" content="website">
+		<meta name="og:site_name" content="{{ siteurl }}">
+		<meta name="fb:app_id" content="{{ fbAppID }}">
+		<meta name="twitter:site" content="@zKillboard">
+		<meta name="twitter:domain" content="{{ fullsiteurl }}">
+		<meta name="application-name" content="{{ siteurl }}"/>
+		<meta name="msapplication-TileColor" content="#000000"/>
+		<meta name="mobile-web-app-capable" content="yes">
+		<link rel="shortcut icon" sizes="16x16" href="//{{ siteurl }}/favicon.ico" />
+		{% block opengraph %}
+			<meta name="twitter:title" content="{{ pageTitle }} | {{ siteurl }}">
+			<meta name="twitter:card" content="summary">
+			<meta name="twitter:description" content="{{ description }}">
+			<meta name="twitter:image" content="{{ fullsiteurl }}/img/3D.png">
+			<meta name="og:title" content="{{ siteurl }} / {{ pageTitle }}">
+			<meta name="og:url" content="{{ fullsiteurl }}">
+			<meta name="og:description" content="{{ description }}">
+			<meta name="og:image" content="{{ fullsiteurl }}/img/3D.png">
+		{% endblock %}
+        {% block head %}
+        {% endblock %}
+
+		{% block robots %}
+		{% endblock %}
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script defer src="https://cdn.fuseplatform.net/publift/tags/2/2136/fuse.js"></script> 
+
+		<title>
+			{% block title %}
+				{{ siteurl }}
+			{% endblock %}
+		</title>
+
+		{% if canonical is not defined %}
+			{% set canonical = fullsiteurl ~ requesturi %}
+		{% endif %}
+
+		<link rel="canonical" href="{{ canonical }}">
+		<link rel="search" type="application/opensearchdescription+xml" href="//{{ siteurl }}/xml/zkbsearch.xml" title="search">
+
+		<link id="mainstyle" rel="stylesheet" href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/cyborg/bootstrap.min.css">
+
+		<link rel="stylesheet" href="//{{ siteurl }}/css/style-edits/cyborg-main.css?v={{ version }}" id="nextstyle">
+		<link rel="stylesheet" href="//{{ siteurl }}/css/main.css?v={{ version }}">
+		<link rel="stylesheet" href="//{{ siteurl }}/css/nprogress.css">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" />
+
+
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.7.2/css/bootstrap-slider.min.css">
+
+		{% block style %}
+		{% endblock %}
+
+		{% if showAnalytics != false %}
+			{{ analytics|raw }}
+		{% endif %}
+
+		<style type="text/css">
+			.topBoxes td {
+			vertical-align: middle !important;
+			}
+		</style>
+                <script type="text/javascript">
+var showAds = {{ showAds|default(1) }};
+var characterID = {{ characterID }};
+var navbar = true; 
+var entityType = '{{ entityType }}';
+var entityID = '{{ entityID }}';
+var entityPage = '{{ pageType }}';
+var start_websocket = {{ websocket }};
+var actualURI = '{{ actualURI }}';
+                </script>
+	</head>
+	<body>
+        <noscript><div id="nojsfulloverlay">JavaScript required.</div></noscript>
+		<div class="content">
+
+			<!-- The navbar -->
+			<div class="container" id='navibar' style="padding: 0px;">
+				{% include "navigationbar.html" %}
+			</div>
+
+			<div class="container nobackground">
+				{% if apiStatus and actualURI == '/' %}
+					<div class="alert alert-danger" style="font-weight: bold"><center>{{ apiStatus|raw }}</center></div>
+				{% endif %}
+
+				<!-- Top ad -->
+                <div style="max-height: 100px; height: 100px;">
+				    <div class="centered publift" fuse="home_header" id="publifttop" style='height: 100px; padding-top: 1em;'><div id='messagedad' style='display: none;'><h4>AdBlock Detected! :(</h2><p>Please support zKillboard by disabling your adblocker.<br/><a href="/information/payments/">Or block them with ISK and get a golden wreck too.</a></p></div></div>
+                </div>
+
+                <div id='otherBannerDiv' class='centered' style='display: none; height: 100px; padding-top: 1em;'><a id='otherBannerAnchor' target='_new'><img id='otherBannerImg' /></a></div>
+                <hr/>
+
+                <div class='hidden-lg alert alert-danger optimizeme'>Optimized for Desktop First...<br/>Try making your window wider or switching to desktop mode.</div>
+                <span class='pagecontent'>{% endif %}
+				<!-- The text header -->
+				{% block header %}{% endblock %}
+				<!-- The actual site content-->
+				{% block content %}Default content{% endblock %}
+                                {% if not partial %}</span>
+
+				<div class="clearfix"></div>
+
+				<!-- Bottom ad -->
+				<div class="centered publift" fuse="home_footer" id="adsensebottom" style='height: 100px; padding-top: 1em;'></div>
+
+				<!-- Footer -->
+				<div class="hidden-xs">{% include "footer.html" %}</div>
+			</div>
+
+			<!-- Modals -->
+			<div class="container">
+				{% block modal %}{% endblock %}
+			</div>
+		</div>
+
+        <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+        <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.4.11/jquery.autocomplete.min.js" integrity="sha512-uxCwHf1pRwBJvURAMD/Gg0Kz2F2BymQyXDlTqnayuRyBFE7cisFCh2dSb1HIumZCRHuZikgeqXm8ruUoaxk5tA==" crossorigin="anonymous"></script>
+        <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous"></script>
+
+		<script defer type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.1.0/jquery.timeago.min.js"></script>
+		<script defer type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/datatables/1.9.4/jquery.dataTables.min.js"></script>
+		<script defer type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/js/bootstrap.min.js"></script>
+		<script defer type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.7.2/bootstrap-slider.min.js"></script>
+
+		<script defer type="text/javascript" src="//{{ siteurl }}/js/search.js?v={{ version }}"></script>
+		<script defer type="text/javascript" src="//{{ siteurl }}/js/common.js?v={{ version }}"></script>
+		<script defer type="text/javascript" src="//{{ siteurl }}/js/sclock1.js"></script>
+		<script defer type="text/javascript" src="//{{ siteurl }}/js/nprogress.js"></script>
+		<script defer type="text/javascript" src="/js/reconnecting-websocket.js"></script>
+		<script defer type="text/javascript" src="//{{ siteurl }}/js/rankstablesort.js"></script>
+
+		{% block script %}
+		{% endblock %}
+
+<div class="ttooltip hidden" id="ttooltip"><span class='X red' onclick="$('#ttooltip').addClass('hidden'); return false;">X</span><br/><span id='tipmsg'></span></div>
+<div class="modal fade" id="modalMessage">
+        <div class="modal-dialog">
+                <div class="modal-content">
+                        <div class="modal-header">
+                                <span id='modalTitle' class="modal-title">Message</span>
+                                <button id='modalCloseButton' type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="color: red; font-weight: bold;">X</span></button>
+                        </div>
+                        <div class="modal-body">
+                                <form name="myform" class="form">
+					<span id='modalMessageBody'></span>
+                                </form>
+                        </div>
+                </div>
+        </div>
+</div>
+<div class="modal fade" id="iframed">
+        <div class="modal-dialog">
+                <div class="modal-content">
+                        <div class="modal-header">
+                                <h4 class="modal-title">&lt;iframe&gt; detected</h4>
+                        </div>
+                        <div class="modal-body">
+				<p>zKillboard has detected that it has been embedded in an iframe.  We're ok with this, however, your experience might not be that great.  <a href="{{ fullsiteurl }}{{ requesturi}}" target="_blank">Click here to view this embedded window properly</a>, or just click anywhere below this dialog to view the iframe.</p>
+                        </div>
+                </div>
+        </div>
+</div>
+<div class="modal fade" id="login-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Login to Win!</h4>
+            </div>
+            <div class="modal-body">
+                <p>Win Scope Syndication YC122 SKINs! All you have to do for a chance to win is login! Contest winners will be randomly selected on Mondays.<p>
+                <div>
+                           <form action="/ccpoauth2/" id="loginform">
+                                <input id='ssologinimage' type="image" src="/img/ssologin.png">
+                            </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="ad-xl-block"><div class="ad-xl-block left-sticky-ad publift" fuse="left-sticky"></div></div>
+<div class="ad-xl-block"><div class="ad-xl-block right-sticky-ad publift" fuse="right-sticky"></div></div>
+<!-- Interstitial Ad -->
+<!-- <div class="ad-sm-block bottom-padding"></div>
+<div class="centered publift ad-sm-block bottom-interstitial" fuse="home_footer" id="bottominterstitial"></div>-->
+
+</body>
+</html>
+{% endif %}

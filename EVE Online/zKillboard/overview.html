@@ -1,0 +1,287 @@
+{% extends 'base.html' %}
+
+{% if pageType and pageType != 'overview' %}
+	{% set pageTitle = pageName ~ ' | ' ~ pageType|capitalize ~ ' | ' ~ key|capitalize %}
+{% else %}
+	{% set pageTitle = pageName ~ ' | ' ~ key|capitalize %}
+{% endif %}
+{% block title %}{% include 'components/title.html' %}{% endblock %}
+
+{% set description = pageName ~ ( detail.ranks.overallRank ? ": Ranked #" ~ detail.ranks.overallRank|number_format(0) ~ " with " : ": " ) ~ detail.shipsDestroyed|number_format(0) ~ " ships destroyed and " ~ detail.shipsLost|number_format(0) ~ " ships lost." %}
+{% set canonical = fullsiteurl ~ "/" ~  key ~ "/" ~ id ~ "/" %}
+
+{% block content %}
+{% include 'components/partial_title.html' %}
+{% include 'components/info_top.html' %}
+
+<div class="navbar navbar-default">
+	<div class="navbar-header">
+    	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-sub">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button>
+	</div>
+	<div class="collapse navbar-collapse navbar-sub">
+	<ul class="nav navbar-nav">
+		{% if prevID %}
+		<li class="hidden-xs"><a href="/{{ key }}/{{ prevID }}/">&lt;</a></li>
+		{% endif %}
+		<li class="{{ isActive('Overview', pageType) }}"><a href="/{{ key }}/{{ id }}/">Overview</a></li>
+		<li class="{{ isActive('Kills', pageType) }}"><a href="/{{ key }}/{{ id }}/kills/{{YWMurl}}">Kills</a></li>
+		<li class="{{ isActive('Solo', pageType) }} hidden-xs"><a href="/{{ key }}/{{ id }}/solo/{{YWMurl}}">Solo</a></li>
+		<li class="{{ isActive('Losses', pageType) }}"><a href="/{{ key }}/{{ id }}/losses/{{YWMurl}}">Losses</a></li>
+        {% if key == 'character' %}
+		<li class="{{ isActive('Trophies', pageType) }}"><a href="/{{ key }}/{{ id }}/trophies/">Trophies</a></li>
+	{% endif %}
+	{% if key == "ship" %}
+		<li class="{{ isActive('Description', pageType) }}"><a href="/item/{{ id }}/">Description</a></li>
+	{% endif %}
+	<li class="dropdown hidden-xs">
+		<a href="#" class="dropdown-toggle" data-toggle="dropdown">Top <b class="caret"></b></i></a>
+		<ul class="dropdown-menu">
+			<li class="{{ isActive('top', pageType) }} hidden-xs"><a href="/{{ key }}/{{ id }}/top/">Monthly Top</a></li>
+			<li class="{{ isActive('topalltime', pageType) }} hidden-xs"><a href="/{{ key }}/{{ id }}/topalltime/">All Time Top</a></li>
+		</ul>
+	</li>
+	<li class="{{ isActive('ranks', pageType) }} hidden-xs"><a href="/{{ key }}/{{ id }}/ranks/">Ranks</a></li>
+	<li class="{{ isActive('stats', pageType) }} hidden-xs"><a href="/{{ key }}/{{ id }}/stats/">Stats</a></li>
+	{% if extra.hasSupers %}
+	<li class="{{ isActive('supers', pageType) }} hidden-xs"><a href="/{{ key }}/{{ id }}/supers/">Supers</a></li>
+	{% endif %}
+	{% if extra.hasWars > 0 %}
+	<li class="{{ isActive('wars', pageType) }} hidden-xs"><a href="/{{ key }}/{{ id }}/wars/">Wars</a></li>
+	{% endif %}
+	</ul>
+	<ul class="nav navbar-nav pull-right hidden-xs">
+	{% if key == "character" %}
+		<li class="hidden-md hidden-sm"><a href="https://evewho.com/character/{{ id }}" target="_blank">EVEWho</a></li>
+	{% elseif key == "corporation" %}
+		<li class="hidden-md hidden-sm"><a href="https://evemaps.dotlan.net/corp/{{ pageName|url_encode }}/" target="_blank">DOTLAN</a></li>
+		<li class="hidden-md hidden-sm"><a href="https://evewho.com/corporation/{{ id }}" target="_blank">EVEWho</a></li>
+	{% elseif key == "alliance" %}
+		<li class="hidden-md hidden-sm"><a href="https://evemaps.dotlan.net/alliance/{{ pageName|url_encode }}/" target="_blank">DOTLAN</a></li>
+		<li class="hidden-md hidden-sm"><a href="https://evewho.com/alliance/{{ id }}" target="_blank">EVEWho</a></li>
+	{% elseif key == "system" %}
+		<li><a href="https://evemaps.dotlan.net/system/{{ pageName|url_encode }}/" target="_blank">DOTLAN</a></li>
+		{% if detail.regionID >= 11000001 and detail.regionID <= 11000033 %}
+		{% endif %}
+	{% elseif key == "region" %}
+		<li><a href="https://evemaps.dotlan.net/region/{{ pageName|url_encode }}/" target="_blank">DOTLAN</a></li>
+	{% endif %}
+		{% if nextID %}
+		<li class="hidden-xs"><a href="/{{ key }}/{{ nextID }}/">&gt;</a></li>
+		{% endif %}
+	</ul>
+</div>
+</div>
+
+<div class="row">
+{% if pageType == 'overview' or pageType == 'kills' or pageType == 'solo' or pageType == 'losses' %}
+  <div class="col-lg-10 pull-left" style="padding-left: 0px;">
+    {% if mixed %}
+        {% set killListTitle = 'Recent Activity' %}
+    {% else %}
+        {% set killListTitle = 'Kills' %}
+    {% endif %}
+    {% set killList = kills %}
+    {% set mixed = 0 %}
+	{% set numPages = combinedPages %}
+	{% set isEmbedded = true %}
+{% if pageType == 'kills' %}
+      {% set topTitle = 'Most Valuable Kills - Last 7 Days' %}
+    {% set killListTitle = 'Kills' %}
+    {% set numPages = killPages %}
+	{% set killList = kills %}
+	{% set isEmbedded = true %}
+{% elseif pageType == 'solo' %}
+      {% set topTitle = 'Most Valuable Solo Kills - Last 7 Days' %}
+    {% set killListTitle = 'Solo' %}
+    {% set numPages = soloPages %}
+	{% set killList = solo %}
+	{% set isEmbedded = true %}
+{% elseif pageType == 'losses' %}
+      {% set topTitle = 'Most Valuable Losses - Last 7 Days' %}
+    {% set killListTitle = 'Losses' %}
+    {% set numPages = lossPages %}
+	{% set killList = losses %}
+	{% set isEmbedded = true %}
+{% endif %}
+    {% set topSet = topKills %}
+    {% set topTitle = 'Most Valuable Kills - Last 7 Days' %}
+    {% include 'components/big_top_list.html' %}
+    {% set topTitle = 'Sponsored Killmails - Last 7 Days' %}
+    {% set topSet = extra.sponsoredMails %}
+    {% include 'components/big_top_list.html' %}
+    <div class="centered publift adrow ad-xl-none" fuse="home_incontent" id="detailadrow" style='padding-top: 1em;'></div>
+    {% include 'components/kill_list.html' %}
+  </div>
+  <div class="col-lg-2 pull-left" style="padding: 0px;">
+    <center><div style='max-width: 180px;'><a id='loginsideimage' href='/ccpoauth2/' class='btn btn-block collapse'><img src='/img/ssologin.png' style='width: 100%; max-width: 100%;'></a></div></center>
+    {% include 'components/activity.html' %}
+	{% include 'components/activePvP.html' %}
+            {% if topLists|length %}
+        	{% for topSet in topLists %}
+        		{% include 'components/top_killer_list.html' %}
+        	{% endfor %}
+		<!--<center><em><small>Last 7 days...<br/></small></em></center>-->
+            {% endif %}
+  </div>
+{% elseif pageType == 'trophies' %}
+	<div class="centered publift adrow ad-xl-none" fuse="home_incontent" id="detailadrow" style='padding-top: 1em;'></div>
+    {% include 'components/trophies.html' %}
+{% elseif pageType == 'api' %}
+	<div class="centered publift adrow ad-xl-none" fuse="home_incontent" id="detailadrow" style='padding-top: 1em;'></div>
+    {% include 'components/corp_list.html' %}
+{% elseif pageType == 'stats' %}
+	<div class="centered publift adrow ad-xl-none" fuse="home_incontent" id="detailadrow" style='padding-top: 1em;'></div>
+    {% include 'components/summary.html' %}
+    <div class="clearfix"></div>
+    {% include 'components/history.html' %}
+{% elseif pageType == 'ranks' %}
+    <p><a href='/ranks/recent/killers/'>See Top 10 Ranks here</a></p>
+    {% include 'components/rank_list.html' %}
+{% elseif pageType == 'top' %}
+	<div class="row centered"><input style="background: transparent; color: white; border: 0px; width:60px; height:35px;" type="text" name="datepicker" class="datepicker" value="{{ month }}/{{ year }}">&nbsp;<i class="fa fa-calendar-o"></i><br/><a href='./solo/'>Solo Version (beta)</a></div><hr/>
+    {% set topSet = topKills %}
+    {% set topTitle = 'Most Valuable Kills - Month Selected' %}
+	{% set isEmbedded = true %}
+    {% include 'components/big_top_list.html' %}
+    <hr/>
+	{% set showImage = true %}
+	{% include 'components/top_list.html' %}
+{% elseif pageType == 'topalltime' %}
+	<div class="centered publift adrow ad-xl-none" fuse="home_incontent" id="detailadrow" style='padding-top: 1em;'></div>
+	<h4>Top All Time</h4>
+    {% set topSet = topKills %}
+    {% set topTitle = 'Most Valuable Kills - All Time' %}
+	{% set isEmbedded = true %}
+    {% include 'components/big_top_list.html' %}
+    <hr/>
+	{% set showImage = true %}
+	{% include 'components/top_list.html' %}
+{% elseif pageType == 'corpstats' %}
+	<div class="centered publift adrow ad-xl-none" fuse="home_incontent" id="detailadrow" style='padding-top: 1em;'></div>
+	{% include 'components/corpstats.html' %}
+{% elseif pageType == 'supers' %}
+<div class="centered publift adrow ad-xl-none" fuse="home_incontent" id="detailadrow" style='padding-top: 1em;'></div>
+<h3>Intel - Supers <small>(Last 3 months)</small></h3>
+{% set fieldset = extra.supers.titans %}
+{% include 'components/intel_table.html' %}
+
+{% set fieldset = extra.supers.supercarriers %}
+{% include 'components/intel_table.html' %}
+<div class="clearfix"/>
+
+{% elseif pageType == 'wars' %}
+{% for row in extra.wars %}
+        <div class="pull-left col-lg-6">
+        <center><h4>{{ row.name }}</h4></center>
+	{% set wars = row.wars %}
+        {% include 'components/wars_table.html' %}
+        </div>
+
+        {% if loop.index0 is odd %}
+                <div class="clearfix"></div>
+        {% endif %}
+{% endfor %}
+<div class="clearfix"></div>
+
+{% endif %}
+</div>
+
+{% endblock %}
+
+{% block opengraph %}
+	<meta name="twitter:title" content="{{ pageTitle }}">
+        <meta name="twitter:card" content="summary">
+        <meta name="og:title" content="{{ pageTitle }}">
+        <meta name="og:url" content="{{ fullsiteurl }}/{{ key }}/{{ id }}/">
+	<meta name="twitter:description" content="{{ description }}">
+	<meta name="og:description" content="{{ description }}">
+{% if key == "character" %}
+	<meta name="twitter:image" content="{{ image_server }}{{ key }}s/{{ id }}/portrait?size=128">
+        <meta name="og:image" content="{{ image_server}}{{ key }}s/{{ id }}/portrait?size=128">
+{% elseif key == "corporation" or key == "alliance" %}
+	<meta name="twitter:image" content="{{ image_server }}{{ key }}s/{{ id }}/logo?size=128">
+        <meta name="og:image" content="{{ image_server}}{{ key }}s/{{ id }}/logo?size=128">
+{% elseif key == "system" %}
+	<meta name="twitter:image" content="{{ image_server }}types/8/render?size=64">
+        <meta name="og:image" content="{{ image_server}}types/8/render?size=64">
+{% elseif key == "ship" %}
+	<meta name="twitter:image" content="{{ image_server }}types/{{ id }}/render?size=64">
+        <meta name="og:image" content="{{ image_server}}types/{{ id }}/render?size=64">
+{% elseif key == "region" %}
+	<meta name="twitter:image" content="{{ fullsiteurl }}/img/region_64.png">
+        <meta name="og:image" content="{{ fullsiteurl }}/img/region_64.png">
+{% else %}
+	<meta name="twitter:image" content="{{ image_server }}{{ key }}s/{{ id }}/render?size=128">
+        <meta name="og:image" content="{{ image_server }}{{ key }}s/{{ id }}/render?size=128">
+{% endif %}
+{% endblock %}
+
+{% block script %}
+	<script defer type="text/javascript" src="//{{ siteurl }}/js/tablesorter/jquery.tablesorter.min.js"></script>
+	<script type="text/javascript">
+		function prepPage() {
+			if ($ === undefined) return setTimeout(prepPage, 500);
+			else $("#corpstats").tablesorter({textExtraction: removeCommas});
+		}
+		function removeCommas(val) {
+			return val.innerHTML.replace(',', '', 'g');
+		}
+	</script>
+{% endblock %}
+
+{% block modal %}
+        {% if detail.characterID and key == 'character' %}
+<div class="modal fade" id="largeImage">
+                <div class="modal-dialog">
+                        <div class="modal-content"><center>
+{% set imageSize = 512 %}
+{% set field = detail %}
+		<h3>{{ detail.name }}</h3>
+                {% include 'components/image_char.html' %}</center><br/><br/>
+</div></div></div>
+        {% endif %}
+
+
+{% if pageType == 'overview' and extra.activity.max > 0 %}
+<div class="modal fade" id="heatmap">
+<div class="modal-dialog">
+<div class="modal-content" style='width: 650px;'>
+<div class="modal-header">
+    <h4 class="modal-title">Activity Heatmap</h4>
+</div>
+<div style='margin-right: 1em; padding: 1em;'>
+{% set steps = (extra.activity.max / 5)|round(0, 'floor') %}
+    {% if steps < 1 %}{% set steps = 1 %}{% endif %}
+
+
+<table>
+        <tr>
+            <td></td>
+            {% for hour in 0..23 %}<td><center>{{ hour }}</center></td>{% endfor %}
+        </tr>
+ {% set days = [ 'S', 'M', 'T', 'W', 'R', 'F', 'S' ] %}
+        {% for day in 0..6 %}
+            <tr>
+  <td style='width: 24px; height: 24px;'><center>{{ days[day] }}</center></td>
+                    {% for hour in 0..23 %}
+                    {% set level = 0 %}
+                    {% if extra.activity[day][hour] > 0 %}
+                        {% set level = (extra.activity[day][hour] / steps)|round(0, 'ceil') %}
+                        {% if level > 5 %}{% set level = 5 %}{% endif %}
+                    {% endif %}
+                        <td><center><span style='color: white; width: 24px; height: 24px; background-color: hsla(0, 92%, {{ level * 10 }}%, 1); display: inline-block; margin: 0px; padding: 0px;'>{{ extra.activity[day][hour] }}</span></center></td>
+                    {% endfor %}
+            </tr>
+ {% endfor %}
+    </table>
+     <p>Each block represents an hour of the day for each day of the week. The number indicates how many kills were achieved in that hour over the last 90 days. The redder the block the more kills. A black, empty box indicates 0 kills.</p>
+            </div>
+        </div>
+</div>
+</div>
+{% endif %}
+{% endblock %}
